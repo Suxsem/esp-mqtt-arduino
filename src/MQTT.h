@@ -43,12 +43,11 @@ extern "C" {
 class MQTT
 {
 public:
-	MQTT(const char* client_id, const char* host, uint32_t port);
+	MQTT(const char* host, uint32 port,
+		const char* client_id, const char* client_user, const char* client_pass, uint32_t keepAliveTime, uint8_t cleanSession,
+		const char* will_topic, const char* will_msg, uint8_t will_qos, uint8_t will_retain);
 	~MQTT();
-	
-	void setClientId(const char* client_id);
-	void setUserPwd(const char* user, const char* pwd);
-	
+		
 	void connect();
 	void disconnect();
 	bool isConnected();

@@ -94,7 +94,9 @@ static void mqttDataCb(uint32_t *args, const char* topic, uint32_t topic_len, co
 //------------------------------------------------------------------------------------
 // MQTT class implementation
 //------------------------------------------------------------------------------------
-MQTT::MQTT(const char* client_id, const char* host, uint32_t port) :
+MQTT::MQTT(const char* host, uint32 port,
+		const char* client_id, const char* client_user, const char* client_pass, uint32_t keepAliveTime, uint8_t cleanSession,
+		const char* will_topic, const char* will_msg, uint8_t will_qos, uint8_t will_retain) :
 	onMqttConnectedCb(0)
 	,onMqttDisconnectedCb(0)
 	,onMqttPublishedCb(0)
@@ -105,10 +107,10 @@ MQTT::MQTT(const char* client_id, const char* host, uint32_t port) :
 	MQTT_InitConnection(&mqttClient, host, port);
 
 	// init client
-	MQTT_InitClient(&mqttClient, client_id, "", "", 120, 1);
+	MQTT_InitClient(&mqttClient, client_id, client_user, client_pass, keepAliveTime, cleanSession);
 
 	// init LWT
-	MQTT_InitLWT(&mqttClient, "/lwt", "offline", 0, 0);
+	MQTT_InitLWT(&mqttClient, will_topic, will_msg, will_qos, will_retain);
 
 	// set user data
 	mqttClient.user_data = (void*)this;
@@ -124,19 +126,6 @@ MQTT::MQTT(const char* client_id, const char* host, uint32_t port) :
 MQTT::~MQTT()
 {
 	MQTT_Free(&mqttClient);
-}
-
-
-/*
- */
-void MQTT::setClientId(const char* client_id)
-{
-	MQTT_SetUserId(&mqttClient, client_id);
-}
-
-void MQTT::setUserPwd(const char* user, const char* pwd)
-{
-	MQTT_SetUserPwd(&mqttClient, user, pwd);
 }
 
 
