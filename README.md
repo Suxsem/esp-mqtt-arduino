@@ -12,6 +12,8 @@ Original code for contiki: https://github.com/esar/contiki-mqtt
 
 **warning:**
 
+Subscribe supports qos=0 and qos=1
+
 Avoid Serial.setDebugOutput(true)!
 
 It is currently not recommended to do blocking IO operations (network, serial, file) from callback functions. Instead, set a flag inside the callback and check for that flag inside the loop function.

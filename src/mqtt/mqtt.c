@@ -158,12 +158,14 @@ READPACKET:
 			{
 
 			  case MQTT_MSG_TYPE_SUBACK:
-				if(client->mqtt_state.pending_msg_type == MQTT_MSG_TYPE_SUBSCRIBE && client->mqtt_state.pending_msg_id == msg_id)
+				if(client->mqtt_state.pending_msg_type == MQTT_MSG_TYPE_SUBSCRIBE && client->mqtt_state.pending_msg_id == msg_id){
 				  INFO("MQTT: Subscribe successful\r\n");
+				}
 				break;
 			  case MQTT_MSG_TYPE_UNSUBACK:
-				if(client->mqtt_state.pending_msg_type == MQTT_MSG_TYPE_UNSUBSCRIBE && client->mqtt_state.pending_msg_id == msg_id)
+				if(client->mqtt_state.pending_msg_type == MQTT_MSG_TYPE_UNSUBSCRIBE && client->mqtt_state.pending_msg_id == msg_id){
 				  INFO("MQTT: UnSubscribe successful\r\n");
+				}
 				break;
 			  case MQTT_MSG_TYPE_PUBLISH:
 				if(msg_qos == 1)
@@ -410,7 +412,7 @@ MQTT_Subscribe(MQTT_Client *client, char* topic, uint8_t qos)
 	uint16_t dataLen;
 
 	client->mqtt_state.outbound_message = mqtt_msg_subscribe(&client->mqtt_state.mqtt_connection,
-											topic, 0,
+											topic, qos,
 											&client->mqtt_state.pending_msg_id);
 	INFO("MQTT: queue subscribe, topic\"%s\", id: %d\r\n",topic, client->mqtt_state.pending_msg_id);
 	while(QUEUE_Puts(&client->msgQueue, client->mqtt_state.outbound_message->data, client->mqtt_state.outbound_message->length) == -1){
